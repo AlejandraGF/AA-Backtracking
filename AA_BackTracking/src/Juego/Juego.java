@@ -23,6 +23,8 @@ public class Juego {
     private ArrayList<Integer> motivo;
     private ArrayList<Boolean> validas;
     private ArrayList<int []> restricciones;
+    private int cantidadRestr;
+    private int[] cartas;
     private String[] nombres = {"Mejor amigo","El novio","El vecino","El mensajero","El extraño","El hermanastro","El colega",
                                     "Pistola","Cuchillo","Machete","Pala","Bate","Botella","Tubo","Cuerda","Venganza","Celos","Dinero",
                                     "Accidente","Drogas","Robo","Cabeza","Pecho","Abdomen","Espalda","Piernas","Brazos","Sala","Comedor",
@@ -37,8 +39,19 @@ public class Juego {
         lugar = new ArrayList<> ();
         motivo = new ArrayList<> ();
         restricciones = new ArrayList<>();
+        cartas = new int[36];
+        
+        cantidadRestr = 50; //Aqui vamos a enlazarlo con la GUI para determinar la cantidad de restricciones.
+        
+        iniciarDatos();
+        obtenerRestriccion(cantidadRestr);
+        buscarRespuesta();
     }
+      
     public void iniciarDatos(){
+        for (int i = 0; i < 36; i++) {
+            cartas[i]= i;
+        }
         for (int i = 0; i < nombres.length; i++) {
             String nombre = nombres[i];
             juegoCartas.add(nombre);
@@ -83,27 +96,14 @@ public class Juego {
         return true;
     }
     public void obtenerRestriccion(int cant){
-        if(cant < 1000){
-            int primeroR;
-            int segundoR;
-            int primero;
-            int segundo;
-            int contador = 0;
-            for (int i = 0; contador < cant; i++) {
-                int numero = (int) (Math.random() * 5);
-                switch(numero){
-                    case 1:{
-                        primeroR = (int) (Math.random() * 7);
-                        primero = sospechoso.get(primeroR);
-                    }
-                    break;
-                    case 2:{
-                        primeroR = (int) (Math.random() * 8);
-                        primero = arma.get(primeroR);
-                    }
-                    break;
-                }
-            }
+        int primeroR;
+        int segundoR;
+        int primero;
+        int segundo;
+        int contador = 0;
+        for (int i = 0; contador < cant; i++) {
+            int numero = (int) (Math.random() * 36);
+            
         }
     }
 }
