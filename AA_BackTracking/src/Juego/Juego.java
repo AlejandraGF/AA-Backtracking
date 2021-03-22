@@ -24,8 +24,9 @@ public class Juego {
                                     "Accidente","Drogas","Robo","Cabeza","Pecho","Abdomen","Espalda","Piernas","Brazos","Sala","Comedor",
                                     "Baño","Terraza","Cuarto","Garage","Patio","Balcón","Cocina"};
     private Boolean[] logicBF;
-    private Boolean[] logicBC;
-    private Boolean[] guessBC;
+    private Boolean[] logicBT;
+    private int[] guessBF;
+    private int[] guessBT;
     public Juego(){
         juegoCartas = new ArrayList<> ();
         solucion = new int[5];
@@ -37,24 +38,96 @@ public class Juego {
         motivo = new ArrayList<> ();*/
         restricciones = new ArrayList<>();
         cartas = new int[36];
-        cantidadRestr = 50; //Aqui vamos a enlazarlo con la GUI para determinar la cantidad de restricciones.
-        logicBC = new Boolean[36];
+        cantidadRestr = 5; //Aqui vamos a enlazarlo con la GUI para determinar la cantidad de restricciones.
+        logicBT = new Boolean[36];
         logicBF = new Boolean[36]; // estos arreglos son para ver qué carta pueden usar aún
+        guessBF = new int[5];
+        guessBT = new int[5];
         
-        
-        
+        System.out.println("Empieza juego");
         iniciarDatos();
         obtenerRestriccion(cantidadRestr);
         buscarRespuesta();
+        System.out.println("La respuesta dada por correcta es: "+nombres[solucion[0]]+" con "+nombres[solucion[1]]+" por "+nombres[solucion[2]]+" en el/la "+nombres[solucion[3]]+" en el/la "+nombres[solucion[4]]);
         fuerzaBruta();
     }
+    private void marcarIncorrectaBF(int sospechoso,int arma,int motivo,int parteCuerpo,int lugar){
+        int num = (int) (Math.random() * 5);
+        switch (num) {
+            case 0:
+                if (solucion[0]!=sospechoso) {
+                    logicBF[sospechoso]=false;
+                }
+                else{
+                    marcarIncorrectaBF(sospechoso, arma, motivo, parteCuerpo, lugar);
+                }   break;
+            case 1:
+                if (solucion[1]!=arma) {
+                    logicBF[arma]=false;
+                }
+                else{
+                    marcarIncorrectaBF(sospechoso, arma, motivo, parteCuerpo, lugar);
+                }   break;
+            case 2:
+                if (solucion[2]!=motivo) {
+                    logicBF[motivo]=false;
+                }
+                else{
+                    marcarIncorrectaBF(sospechoso, arma, motivo, parteCuerpo, lugar);
+                }   break;
+            case 3:
+                if (solucion[3]!=parteCuerpo) {
+                    logicBF[parteCuerpo]=false;
+                }
+                else{
+                    marcarIncorrectaBF(sospechoso, arma, motivo, parteCuerpo, lugar);
+                }   break;
+            default:
+                if (solucion[4]!=lugar) {
+                    logicBF[lugar]=false;
+                }
+                else{
+                    marcarIncorrectaBF(sospechoso, arma, motivo, parteCuerpo, lugar);
+                }   break;
+        }
+    }
     public void fuerzaBruta(){
-        
+        int sospechoso;
+        int arma;
+        int motivo;
+        int parteCuerpo;
+        int lugar;
+        do {            
+            sospechoso = (int) (Math.random() * 7);
+        } while (!logicBF[sospechoso]);
+        do {            
+            arma = (int) (Math.random() * 8);
+            arma += 7;
+        } while (!logicBF[arma]);
+        do {            
+            motivo = (int) (Math.random() * 6);
+            motivo += 15;
+        } while (!logicBF[motivo]);
+        do {            
+            parteCuerpo = (int) (Math.random() * 6);
+            parteCuerpo += 21;
+        } while (!logicBF[parteCuerpo]);
+        do {            
+            lugar = (int) (Math.random() * 9);
+            lugar += 27;
+        } while (!logicBF[lugar]);
+        if (sospechoso==solucion[0] && arma ==solucion[1] && motivo==solucion[2] && parteCuerpo==solucion[3] && lugar==solucion[4]) {
+            System.out.println("La respuesta dada por el Brute Force es: "+nombres[sospechoso]+" con "+nombres[arma]+" por "+nombres[motivo]+" en el/la "+nombres[parteCuerpo]+" en el/la "+nombres[lugar]);
+        }
+        else{
+            marcarIncorrectaBF(sospechoso, arma, motivo, parteCuerpo, lugar);
+            fuerzaBruta();
+        }
     }
     public void iniciarDatos(){
         for (int i = 0; i < 36; i++) {
             cartas[i]= i;
-            logicBC[i]=Boolean.TRUE;
+            logicBT[i]=Boolean.TRUE;
             logicBF[i]=Boolean.TRUE;
         }
         
@@ -72,7 +145,7 @@ public class Juego {
             solucion[3] = numero + 21;
             numero = (int) (Math.random() * 9);
             solucion[4] = numero +27;
-        } while (solucionValida());
+        } while (!solucionValida());
     }
     public boolean solucionValida(){
         for (int i = 0; i < restricciones.size(); i++) {
@@ -92,7 +165,7 @@ public class Juego {
         }
         for (int i = 0; i < restricciones.size(); i++) {
             int [] get = restricciones.get(i);
-            if (get[0] == num1 && get[1] == num2 || get[1] == num1 && get[2] == num2)
+            if ((get[0] == num1 && get[1] == num2) || (get[1] == num1 && get[0] == num2))
                 return false;
         }
         return true;
@@ -100,11 +173,8 @@ public class Juego {
     public void obtenerRestriccion(int cant){
         int primeroR;
         int segundoR;
-        int primero;
-        int segundo;
         int[] rest = new int[2];
-        int contador = 0;
-        for (int i = 0; contador < cant; i++) {
+        for (int i = 0; i < cant; i++) {
             primeroR = (int) (Math.random() * 36);
             segundoR = (int) (Math.random() * 36);
             while (!revisarRestriccion(primeroR, segundoR)){
