@@ -48,55 +48,26 @@ public class Juego {
         iniciarDatos();
         obtenerRestriccion(cantidadRestr);
         buscarRespuesta();
-        System.out.println("La respuesta dada por correcta es: "+nombres[solucion[0]]+" con "+nombres[solucion[1]]+" por "+nombres[solucion[2]]+" en el/la "+nombres[solucion[3]]+" en el/la "+nombres[solucion[4]]);
+        System.out.println("La respuesta dada por correcta es: "+nombres[solucion[0]]+" con "+nombres[solucion[1]]+" por "+nombres[solucion[2]]+" en el/la "+nombres[solucion[3]]+" en el/la "+nombres[solucion[4]]);        
         fuerzaBruta();
     }
-    private void marcarIncorrectaBF(int sospechoso,int arma,int motivo,int parteCuerpo,int lugar){
-        int num = (int) (Math.random() * 5);
-        switch (num) {
-            case 0:
-                if (solucion[0]!=sospechoso) {
-                    logicBF[sospechoso]=false;
-                }
-                else{
-                    marcarIncorrectaBF(sospechoso, arma, motivo, parteCuerpo, lugar);
-                }   break;
-            case 1:
-                if (solucion[1]!=arma) {
-                    logicBF[arma]=false;
-                }
-                else{
-                    marcarIncorrectaBF(sospechoso, arma, motivo, parteCuerpo, lugar);
-                }   break;
-            case 2:
-                if (solucion[2]!=motivo) {
-                    logicBF[motivo]=false;
-                }
-                else{
-                    marcarIncorrectaBF(sospechoso, arma, motivo, parteCuerpo, lugar);
-                }   break;
-            case 3:
-                if (solucion[3]!=parteCuerpo) {
-                    logicBF[parteCuerpo]=false;
-                }
-                else{
-                    marcarIncorrectaBF(sospechoso, arma, motivo, parteCuerpo, lugar);
-                }   break;
-            default:
-                if (solucion[4]!=lugar) {
-                    logicBF[lugar]=false;
-                }
-                else{
-                    marcarIncorrectaBF(sospechoso, arma, motivo, parteCuerpo, lugar);
-                }   break;
-        }
-    }
+    
     public void fuerzaBruta(){
-        int sospechoso;
-        int arma;
-        int motivo;
-        int parteCuerpo;
-        int lugar;
+        for (int sospechoso = 0; sospechoso < 7; sospechoso++) {
+            for (int arma = 0; arma < 8; arma++) {
+                for (int motivo = 0; motivo < 6; motivo++) {
+                    for (int parteC = 0; parteC < 6; parteC++) {
+                        for (int lugar = 0; lugar < 9; lugar++) {
+                            if (sospechoso==solucion[0] && arma+7 ==solucion[1] && motivo+15==solucion[2] && parteC+21==solucion[3] && lugar+27==solucion[4]) {
+                                System.out.println("La respuesta dada por el Brute Force es: "+nombres[sospechoso]+" con "+nombres[arma+7]+" por "+nombres[motivo+14]+" en el/la "+nombres[parteC+20]+" en el/la "+nombres[lugar+26]);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        /*
         do {            
             sospechoso = (int) (Math.random() * 7);
         } while (!logicBF[sospechoso]);
@@ -116,19 +87,31 @@ public class Juego {
             lugar = (int) (Math.random() * 9);
             lugar += 27;
         } while (!logicBF[lugar]);
-        if (sospechoso==solucion[0] && arma ==solucion[1] && motivo==solucion[2] && parteCuerpo==solucion[3] && lugar==solucion[4]) {
-            System.out.println("La respuesta dada por el Brute Force es: "+nombres[sospechoso]+" con "+nombres[arma]+" por "+nombres[motivo]+" en el/la "+nombres[parteCuerpo]+" en el/la "+nombres[lugar]);
+        */
+        /*
+        if (pguessBF[0]==solucion[0] && pguessBF[1] ==solucion[1] && pguessBF[2]==solucion[2] && pguessBF[3]==solucion[3] && pguessBF[4]==solucion[4]) {
+            System.out.println("La respuesta dada por el Brute Force es: "+nombres[pguessBF[0]]+" con "+nombres[pguessBF[1]+7]+" por "+nombres[pguessBF[2]+14]+" en el/la "+nombres[pguessBF[3]+20]+" en el/la "+nombres[pguessBF[4]+26]);
         }
-        else{
-            marcarIncorrectaBF(sospechoso, arma, motivo, parteCuerpo, lugar);
-            fuerzaBruta();
-        }
+        else {
+            if (pguessBF[0]>6) {
+                return;
+            }
+            if (pguessBF[1]>7||pguessBF[2]>5||pguessBF[3]>5||pguessBF[4]>8) {
+                int aux = pguessBF[0];
+                pguessBF
+                fuerzaBruta(pguessBF);
+            }
+        }*/
     }
     public void iniciarDatos(){
         for (int i = 0; i < 36; i++) {
             cartas[i]= i;
             logicBT[i]=Boolean.TRUE;
             logicBF[i]=Boolean.TRUE;
+        }
+        for (int i = 0; i < 5; i++) {
+            guessBF[i]=0;
+            guessBT[i]=0;
         }
         
     }
