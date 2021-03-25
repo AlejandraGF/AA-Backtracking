@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class Juego {
     private ArrayList<String> juegoCartas;
-    private int[] solucion;
+    private int[] solucionArray;
     private ArrayList<Boolean> validas;
     private ArrayList<int []> restricciones;
     private int cantidadRestr;
@@ -23,85 +23,89 @@ public class Juego {
                                     "Pistola","Cuchillo","Machete","Pala","Bate","Botella","Tubo","Cuerda","Venganza","Celos","Dinero",
                                     "Accidente","Drogas","Robo","Cabeza","Pecho","Abdomen","Espalda","Piernas","Brazos","Sala","Comedor",
                                     "Baño","Terraza","Cuarto","Garage","Patio","Balcón","Cocina"};
-    private Boolean[] logicBF;
+    private ArrayList sospechoso;
+    private ArrayList arma;
+    private ArrayList parteCuerpo;
+    private ArrayList lugar;
+    private ArrayList motivo;
+    private boolean[] logicBF;
     private Boolean[] logicBT;
     private int[] guessBF;
     private int[] guessBT;
     public Juego(){
         juegoCartas = new ArrayList<> ();
-        solucion = new int[5];
+        solucionArray = new int[5];
         validas = new ArrayList<> ();
-        /*sospechoso = new ArrayList<> ();
+        sospechoso = new ArrayList<> ();
         arma = new ArrayList<> ();
         parteCuerpo = new ArrayList<> ();
         lugar = new ArrayList<> ();
-        motivo = new ArrayList<> ();*/
+        motivo = new ArrayList<> ();
         restricciones = new ArrayList<>();
         cartas = new int[36];
         cantidadRestr = 5; //Aqui vamos a enlazarlo con la GUI para determinar la cantidad de restricciones.
         logicBT = new Boolean[36];
-        logicBF = new Boolean[36]; // estos arreglos son para ver qué carta pueden usar aún
+        logicBF = new boolean[36]; // estos arreglos son para ver qué carta pueden usar aún
         guessBF = new int[5];
         guessBT = new int[5];
+        
         
         System.out.println("Empieza juego");
         iniciarDatos();
         obtenerRestriccion(cantidadRestr);
         buscarRespuesta();
-        System.out.println("La respuesta dada por correcta es: "+nombres[solucion[0]]+" con "+nombres[solucion[1]]+" por "+nombres[solucion[2]]+" en el/la "+nombres[solucion[3]]+" en el/la "+nombres[solucion[4]]);        
-        fuerzaBruta();
+        System.out.println("La respuesta dada por correcta es: "+nombres[solucionArray[0]]+" con "+nombres[solucionArray[1]]+" por "+nombres[solucionArray[2]]+" en el/la "+nombres[solucionArray[3]]+" en el/la "+nombres[solucionArray[4]]);        
+        fuerzaBruta(sospechoso, arma, motivo, parteCuerpo, lugar, solucionArray, logicBF);
     }
     
-    public void fuerzaBruta(){
-        for (int sospechoso = 0; sospechoso < 7; sospechoso++) {
-            for (int arma = 0; arma < 8; arma++) {
-                for (int motivo = 0; motivo < 6; motivo++) {
-                    for (int parteC = 0; parteC < 6; parteC++) {
-                        for (int lugar = 0; lugar < 9; lugar++) {
-                            if (sospechoso==solucion[0] && arma+7 ==solucion[1] && motivo+15==solucion[2] && parteC+21==solucion[3] && lugar+27==solucion[4]) {
-                                System.out.println("La respuesta dada por el Brute Force es: "+nombres[sospechoso]+" con "+nombres[arma+7]+" por "+nombres[motivo+14]+" en el/la "+nombres[parteC+20]+" en el/la "+nombres[lugar+26]);
-                                return;
+    public void fuerzaBruta(ArrayList<Integer> sospechosos, ArrayList<Integer> armas, ArrayList<Integer> motivos, ArrayList<Integer> parteCuerpos, ArrayList<Integer> lugares, int[] solucion,boolean[] cartasValidas){
+        for (int sospechoso: sospechosos) {
+            for (int arma : armas) {
+                if (cartasValidas[arma]) {
+                    for (int motivo : motivos) {
+                        if (cartasValidas[motivo]) {
+                            for (int parteC : parteCuerpos) {
+                                if (cartasValidas[parteC]) {
+                                    for (int lugar : lugares) {
+                                        if (cartasValidas[lugar]) {
+                                            if (sospechoso==solucion[0] && arma ==solucion[1] && motivo==solucion[2] && parteC==solucion[3] && lugar==solucion[4]) {
+                                            System.out.println("La respuesta dada por el Brute Force es: "+nombres[sospechoso]+" con "+nombres[arma]+" por "+nombres[motivo]+" en el/la "+nombres[parteC]+" en el/la "+nombres[lugar]);
+                                            return;
+                                            }
+                                            else{
+                                                boolean bandera=true;
+                                                do {                                    
+                                                    int numero = (int) (Math.random() * 5);
+                                                    if (numero==0 && sospechoso!=solucion[0]) {
+                                                        cartasValidas[sospechoso]=false;
+                                                        bandera=false;
+                                                    }
+                                                    else if (numero == 1 && arma!=solucion[1]) {
+                                                        cartasValidas[arma]=false;
+                                                        bandera=false;
+                                                    }
+                                                    else if (numero ==2 && motivo!= solucion[2]) {
+                                                        cartasValidas[motivo]=false;
+                                                        bandera=false;
+                                                    }else if (numero == 3 && parteC!= solucion[3]) {
+                                                        cartasValidas[parteC]=false;
+                                                        bandera=false;
+                                                    }
+                                                    else if (lugar!=solucion[4]) {
+                                                        cartasValidas[lugar]=false;
+                                                        bandera=false;
+                                                    }
+                                                } while (bandera);
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
         }
-        /*
-        do {            
-            sospechoso = (int) (Math.random() * 7);
-        } while (!logicBF[sospechoso]);
-        do {            
-            arma = (int) (Math.random() * 8);
-            arma += 7;
-        } while (!logicBF[arma]);
-        do {            
-            motivo = (int) (Math.random() * 6);
-            motivo += 15;
-        } while (!logicBF[motivo]);
-        do {            
-            parteCuerpo = (int) (Math.random() * 6);
-            parteCuerpo += 21;
-        } while (!logicBF[parteCuerpo]);
-        do {            
-            lugar = (int) (Math.random() * 9);
-            lugar += 27;
-        } while (!logicBF[lugar]);
-        */
-        /*
-        if (pguessBF[0]==solucion[0] && pguessBF[1] ==solucion[1] && pguessBF[2]==solucion[2] && pguessBF[3]==solucion[3] && pguessBF[4]==solucion[4]) {
-            System.out.println("La respuesta dada por el Brute Force es: "+nombres[pguessBF[0]]+" con "+nombres[pguessBF[1]+7]+" por "+nombres[pguessBF[2]+14]+" en el/la "+nombres[pguessBF[3]+20]+" en el/la "+nombres[pguessBF[4]+26]);
-        }
-        else {
-            if (pguessBF[0]>6) {
-                return;
-            }
-            if (pguessBF[1]>7||pguessBF[2]>5||pguessBF[3]>5||pguessBF[4]>8) {
-                int aux = pguessBF[0];
-                pguessBF
-                fuerzaBruta(pguessBF);
-            }
-        }*/
     }
     public void iniciarDatos(){
         for (int i = 0; i < 36; i++) {
@@ -109,32 +113,48 @@ public class Juego {
             logicBT[i]=Boolean.TRUE;
             logicBF[i]=Boolean.TRUE;
         }
+         for (int i = 0; i < 7; i++) {
+            sospechoso.add(i);
+        }
+        for (int i = 7; i < 15; i++) {
+            arma.add(i);
+        }
+        for (int i = 15; i < 21; i++) {
+            motivo.add(i);
+        }
+        for (int i = 21; i < 27; i++) {
+            parteCuerpo.add(i);
+        }
+        for (int i = 27; i < 36; i++) {
+            lugar.add(i);
+        }
+        /*
         for (int i = 0; i < 5; i++) {
             guessBF[i]=0;
             guessBT[i]=0;
-        }
+        }*/
         
     }
     public void buscarRespuesta(){
         int numero;
         do {
             numero = (int) (Math.random() * 7);
-            solucion[0] = numero;
+            solucionArray[0] = numero;
             numero = (int) (Math.random() * 8);
-            solucion[1] = numero+7;
+            solucionArray[1] = numero+7;
             numero = (int) (Math.random() * 6);
-            solucion[2] = numero + 15;
+            solucionArray[2] = numero + 15;
             numero = (int) (Math.random() * 6);
-            solucion[3] = numero + 21;
+            solucionArray[3] = numero + 21;
             numero = (int) (Math.random() * 9);
-            solucion[4] = numero +27;
+            solucionArray[4] = numero +27;
         } while (!solucionValida());
     }
     public boolean solucionValida(){
         for (int i = 0; i < restricciones.size(); i++) {
             int[] rest = restricciones.get(i);
-            if (rest[0]==solucion[0] || rest[0]==solucion[1] || rest[0]==solucion[2]|| rest[0]==solucion[3] || rest[0]==solucion[4]) {
-                if (rest[1]==solucion[0] || rest[1]==solucion[1] || rest[1]==solucion[2]|| rest[1]==solucion[3] || rest[1]==solucion[4]) {
+            if (rest[0]==solucionArray[0] || rest[0]==solucionArray[1] || rest[0]==solucionArray[2]|| rest[0]==solucionArray[3] || rest[0]==solucionArray[4]) {
+                if (rest[1]==solucionArray[0] || rest[1]==solucionArray[1] || rest[1]==solucionArray[2]|| rest[1]==solucionArray[3] || rest[1]==solucionArray[4]) {
                     return false;   
                 }
             }
@@ -168,6 +188,5 @@ public class Juego {
             rest[1] = segundoR;
             restricciones.add(rest);
         }
-        
     }
 }
