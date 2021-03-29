@@ -7,6 +7,7 @@ package Juego;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  *
@@ -17,6 +18,7 @@ public class Juego {
     private int[] solucionArray;
     private ArrayList<Boolean> validas;
     private ArrayList<int []> restricciones;
+    private ArrayList descarte;
     private int cantidadRestr;
     private int[] cartas;
     private String[] nombres = {"Mejor amigo","El novio","El vecino","El mensajero","El extraño","El hermanastro","El colega",
@@ -42,8 +44,9 @@ public class Juego {
         lugar = new ArrayList<> ();
         motivo = new ArrayList<> ();
         restricciones = new ArrayList<>();
+        descarte = new ArrayList<>();
         cartas = new int[36];
-        cantidadRestr = 5; //Aqui vamos a enlazarlo con la GUI para determinar la cantidad de restricciones.
+        cantidadRestr = 900; //Aqui vamos a enlazarlo con la GUI para determinar la cantidad de restricciones.
         logicBT = new Boolean[36];
         logicBF = new boolean[36]; // estos arreglos son para ver qué carta pueden usar aún
         guessBF = new int[5];
@@ -55,7 +58,122 @@ public class Juego {
         obtenerRestriccion(cantidadRestr);
         buscarRespuesta();
         System.out.println("La respuesta dada por correcta es: "+nombres[solucionArray[0]]+" con "+nombres[solucionArray[1]]+" por "+nombres[solucionArray[2]]+" en el/la "+nombres[solucionArray[3]]+" en el/la "+nombres[solucionArray[4]]);        
+        // Pruebas para saber qué es lo que se marca como correcto o incorrecto al correr el de fuerza bruta.
+        /*
+        System.out.println("LogicBF antes= ");
+        for (int i = 0; i < logicBF.length; i++) {
+            System.out.println(logicBF[i]);
+        }*/
+        
+        //fuerzaBruta(sospechoso, arma, motivo, parteCuerpo, lugar, solucionArray, logicBF);
+        
+        /*
+        System.out.println("LogicBF Despues= ");
+        for (int i = 0; i < logicBF.length; i++) {
+            System.out.println(i+1+": "+logicBF[i]);
+        }*/
+        //backtracking(cartas, solucionArray, restricciones, descarte, 0, 7, 15, 21, 27);
+        long inicioms = System.nanoTime();
+        //back2(solucionArray, restricciones, descarte, 0, 7, 15, 21, 27);
         fuerzaBruta(sospechoso, arma, motivo, parteCuerpo, lugar, solucionArray, logicBF);
+        long finms = System.nanoTime();
+
+        System.out.println(inicioms);
+        System.out.println(finms);
+        System.out.println(finms-inicioms);
+        System.out.println("");
+        descarte.clear();
+        
+        inicioms = System.nanoTime();
+        backtracking(solucionArray, restricciones, descarte, 0, 7, 15, 21, 27);
+        //fuerzaBruta(sospechoso, arma, motivo, parteCuerpo, lugar, solucionArray, logicBF);
+        finms = System.nanoTime();
+
+        System.out.println(inicioms);
+        System.out.println(finms);
+        System.out.println(finms-inicioms);
+        
+    }
+    public void backtracking( int[] solucion, ArrayList<int[]> prestricciones, ArrayList<Integer> descartes, int sospechoso, int arma, int motivo, int parteC, int lugar){
+        
+        if (sospechoso==solucion[0] && arma ==solucion[1] && motivo==solucion[2] && parteC==solucion[3] && lugar==solucion[4]) {
+            System.out.println("La respuesta dada por el Backtracking es: "+nombres[sospechoso]+" con "+nombres[arma]+" por "+nombres[motivo]+" en el/la "+nombres[parteC]+" en el/la "+nombres[lugar]);
+            return;
+        }
+        else if (sospechoso>6 && arma>14 && motivo>20 && parteC>26 && lugar>35) {
+            return;
+        }
+        else {
+            boolean bandera=true;
+            int numero;
+            do {                                    
+                numero = (int) (Math.random() * 5);
+                if (numero==0 && sospechoso!=solucion[0]) {
+                    sospechoso++;
+                    bandera=false;
+                }
+                else if (numero == 1 && arma!=solucion[1]) {
+                    arma++;
+                    bandera=false;
+                }
+                else if (numero ==2 && motivo!= solucion[2]) {
+                    motivo++;
+                    bandera=false;
+                }else if (numero == 3 && parteC!= solucion[3]) {
+                    parteC++;
+                    bandera=false;
+                }
+                else if (lugar!=solucion[4]) {
+                    lugar++;
+                    bandera=false;
+                }
+            } while (bandera);
+            boolean esRestriccion=false;
+            int[] rest={-1, -1};
+            for (int i = 0; i < prestricciones.size(); i++) {
+                rest = prestricciones.get(i);
+                if (rest[0]==sospechoso || rest[0]==arma || rest[0]==motivo || rest[0]==parteC || rest[0]==lugar) {
+                    if (rest[1]==sospechoso || rest[1]==arma || rest[1]==motivo || rest[1]==parteC || rest[1]==lugar) {
+                        esRestriccion=true;
+                        break;
+                    }
+                }
+            }
+            if (esRestriccion) {
+                if (rest[0]<7) {
+                    sospechoso++;
+                }
+                else if (rest[0]>6 && rest[0]<15) {
+                    arma++;
+                }
+                else if (rest[0]>14 && rest[0]<21) {
+                    motivo++;
+                }
+                else if (rest[0]>20 && rest[0]<27) {
+                    parteC++;
+                }
+                else {
+                    lugar++;
+                }
+                backtracking(solucion, prestricciones, descartes, sospechoso, arma, motivo, parteC, lugar);
+                if (rest[1]<7) {
+                    sospechoso++;
+                }
+                else if (rest[1]>6 && rest[1]<15) {
+                    arma++;
+                }
+                else if (rest[1]>14 && rest[1]<21) {
+                    motivo++;
+                }
+                else if (rest[1]>20 && rest[1]<27) {
+                    parteC++;
+                }
+                else {
+                    lugar++;
+                }
+            }
+            backtracking(solucion, prestricciones, descartes, sospechoso, arma, motivo, parteC, lugar);
+        }
     }
     
     public void fuerzaBruta(ArrayList<Integer> sospechosos, ArrayList<Integer> armas, ArrayList<Integer> motivos, ArrayList<Integer> parteCuerpos, ArrayList<Integer> lugares, int[] solucion,boolean[] cartasValidas){
@@ -107,6 +225,7 @@ public class Juego {
             }
         }
     }
+    
     public void iniciarDatos(){
         for (int i = 0; i < 36; i++) {
             cartas[i]= i;
