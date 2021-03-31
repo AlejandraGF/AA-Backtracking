@@ -1,4 +1,5 @@
 
+import Juego.InterfazCartas;
 import Juego.Juego;
 
 /*
@@ -20,7 +21,13 @@ public class main {
     public static void main(String[] args) {
         // TODO code application logic here
         System.out.println("empieza");
+        InterfazCartas guiCartas = new InterfazCartas();
         Juego juego = new Juego();
+        juego.guiCartas = guiCartas;
+        guiCartas.juego = juego;
+        juego.startI();
+        guiCartas.setVisible(true);
+        
         System.out.println("Termina");
     }
     
