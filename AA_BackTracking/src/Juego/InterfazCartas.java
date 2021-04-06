@@ -28,10 +28,10 @@ public class InterfazCartas extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        lblBTTime = new javax.swing.JLabel();
         txtSolucion = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        lblFBTime = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
         lbBT1 = new javax.swing.JLabel();
         lbFB2 = new javax.swing.JLabel();
@@ -48,6 +48,9 @@ public class InterfazCartas extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         txtFB = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
+        lblGanador = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -55,10 +58,10 @@ public class InterfazCartas extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(51, 51, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Yu Gothic UI", 0, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("BackTracking");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 265, 149, -1));
+        lblBTTime.setFont(new java.awt.Font("Yu Gothic UI", 0, 14)); // NOI18N
+        lblBTTime.setForeground(new java.awt.Color(255, 255, 255));
+        lblBTTime.setText(" ");
+        jPanel1.add(lblBTTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 276, 320, -1));
 
         txtSolucion.setFont(new java.awt.Font("Yu Gothic UI", 0, 14)); // NOI18N
         txtSolucion.setForeground(new java.awt.Color(255, 255, 255));
@@ -74,10 +77,10 @@ public class InterfazCartas extends javax.swing.JFrame {
         });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 40, 108, 20));
 
-        jLabel3.setFont(new java.awt.Font("Yu Gothic UI", 0, 24)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Fuerza Bruta");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 113, 149, -1));
+        lblFBTime.setFont(new java.awt.Font("Yu Gothic UI", 0, 14)); // NOI18N
+        lblFBTime.setForeground(new java.awt.Color(255, 255, 255));
+        lblFBTime.setText(" ");
+        jPanel1.add(lblFBTime, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 120, 320, -1));
         jPanel1.add(jSpinner1, new org.netbeans.lib.awtextra.AbsoluteConstraints(163, 41, 58, -1));
 
         lbBT1.setFont(new java.awt.Font("Yu Gothic UI", 0, 11)); // NOI18N
@@ -154,16 +157,38 @@ public class InterfazCartas extends javax.swing.JFrame {
 
         jLabel4.setFont(new java.awt.Font("Yu Gothic UI", 0, 14)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Cant. de resticciones: ");
+        jLabel4.setText("Cant. de restricciones: ");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 39, 149, -1));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 11, 890, 450));
+        lblGanador.setFont(new java.awt.Font("Yu Gothic UI", 0, 24)); // NOI18N
+        lblGanador.setForeground(new java.awt.Color(255, 255, 255));
+        lblGanador.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblGanador.setText(" ");
+        jPanel1.add(lblGanador, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 440, 500, 50));
+
+        jLabel2.setFont(new java.awt.Font("Yu Gothic UI", 0, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("BackTracking");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 265, 149, -1));
+
+        jLabel6.setFont(new java.awt.Font("Yu Gothic UI", 0, 24)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setText("Fuerza Bruta");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 113, 149, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 1, 900, 510));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     public void setSolucion(String solucion){
         txtSolucion.setText("");
         txtSolucion.setText(solucion);
+    }
+    public void setGanador(String winner){
+        lblGanador.setText("Ganó "+winner);
+    }
+    public void setTimeFB(long tiempo){
+        lblFBTime.setText("duró "+tiempo+" nanosegundos.");
     }
     public void sugerenciaFB(String sospechoso,String arma,String motivo,String parte,String lugar){
         lbFB1.setText(sospechoso);
@@ -178,6 +203,9 @@ public class InterfazCartas extends javax.swing.JFrame {
         String str = txtFB.getText() + "\n"+solucion;
         txtFB.setText(str);
     }
+    public void setTimeBT(long tiempo){
+        lblBTTime.setText("duró "+tiempo+" nanosegundos.");
+    }
     public void sugerenciaBT(String sospechoso,String arma,String motivo,String parte,String lugar){
         lbBT1.setText(sospechoso);
         lbBT2.setText(arma);
@@ -191,9 +219,28 @@ public class InterfazCartas extends javax.swing.JFrame {
         String str = txtBT.getText() + "\n"+solucion;
         txtBT.setText(str);
     }
+    public void reiniciar(){
+        lblGanador.setText("");
+        lblFBTime.setText("");
+        lblBTTime.setText("");
+        txtSolucion.setText("La solución es:");
+        txtFB.setText("");
+        txtBT.setText("");
+        lbBT1.setText("");
+        lbBT2.setText("");
+        lbBT3.setText("");
+        lbBT4.setText("");
+        lbBT5.setText("");
+        lbFB1.setText("");
+        lbFB2.setText("");
+        lbFB3.setText("");
+        lbFB4.setText("");
+        lbFB5.setText("");
+    }
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        juego.btnIniciar((int)jSpinner1.getValue());
+        reiniciar();
+        juego.btnIniciar((int)jSpinner1.getValue());      
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
@@ -232,10 +279,10 @@ public class InterfazCartas extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
+    public javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -250,6 +297,9 @@ public class InterfazCartas extends javax.swing.JFrame {
     private javax.swing.JLabel lbFB3;
     private javax.swing.JLabel lbFB4;
     private javax.swing.JLabel lbFB5;
+    private javax.swing.JLabel lblBTTime;
+    private javax.swing.JLabel lblFBTime;
+    private javax.swing.JLabel lblGanador;
     private javax.swing.JTextArea txtBT;
     private javax.swing.JTextArea txtFB;
     private javax.swing.JLabel txtSolucion;
