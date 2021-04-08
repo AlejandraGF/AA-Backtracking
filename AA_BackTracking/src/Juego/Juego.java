@@ -19,7 +19,6 @@ public class Juego {
     private int[] solucionArray;
     private ArrayList<Boolean> validas;
     private ArrayList<int []> restricciones;
-    private ArrayList descarte;
     private int[] cartas;
     private String[] nombres = {"Mejor amigo","El novio","El vecino","El mensajero","El extraño","El hermanastro","El colega",
                                     "Pistola","Cuchillo","Machete","Pala","Bate","Botella","Tubo","Cuerda","Venganza","Celos","Dinero",
@@ -44,7 +43,6 @@ public class Juego {
         lugar = new ArrayList<> ();
         motivo = new ArrayList<> ();
         restricciones = new ArrayList<int []>();
-        descarte = new ArrayList<>();
         cartas = new int[36];
         logicBT = new boolean[36];
         logicBF = new boolean[36]; // estos arreglos son para ver qué carta pueden usar aún
@@ -61,9 +59,7 @@ public class Juego {
         lugar.clear();
         motivo.clear();
         restricciones.clear();
-        descarte.clear();
         cartas = new int[36];
-        logicBT = new boolean[36];
         logicBF = new boolean[36]; // estos arreglos son para ver qué carta pueden usar aún
         guessBF = new int[5];
         guessBT = new int[5];
@@ -83,10 +79,9 @@ public class Juego {
         long finms = System.nanoTime();
         long total = finms-inicioms;
         guiCartas.setTimeFB(total);
-        descarte.clear();
         
         inicioms = System.nanoTime();
-        backtracking(solucionArray, restricciones, descarte, 0, 7, 15, 21, 27);
+        backtracking(solucionArray, restricciones, 0, 7, 15, 21, 27);
         finms = System.nanoTime();
         long total1 = finms-inicioms;
         guiCartas.setTimeBT(total1);
@@ -101,7 +96,7 @@ public class Juego {
         //guiCartas.jButton1.setEnabled(true);
         
     }
-    public void backtracking( int[] solucion, ArrayList<int[]> prestricciones, ArrayList<Integer> descartes, int sospechoso, int arma, int motivo, int parteC, int lugar){                                   
+    public void backtracking( int[] solucion, ArrayList<int[]> prestricciones, int sospechoso, int arma, int motivo, int parteC, int lugar){                                   
         if (sospechoso==solucion[0] && arma ==solucion[1] && motivo==solucion[2] && parteC==solucion[3] && lugar==solucion[4]) {
             guiCartas.sugerenciaBT(nombres[sospechoso], nombres[arma], nombres[motivo], nombres[parteC], nombres[lugar]);
             guiCartas.solucionBT("La respuesta dada por el BackTracking es:\n"+nombres[sospechoso]+" con "+nombres[arma]+" por "+nombres[motivo]+" en el/la "+nombres[parteC]+" en el/la "+nombres[lugar]);
@@ -135,7 +130,7 @@ public class Juego {
                 }
                 bandera1 = verificarRest(prestricciones, sospechoso, arma, motivo, parteC, lugar);      
             } while (bandera || bandera1);
-            backtracking(solucion, prestricciones, descartes, sospechoso, arma, motivo, parteC, lugar);
+            backtracking(solucion, prestricciones, sospechoso, arma, motivo, parteC, lugar);
         }
     }
     public boolean verificarRest(ArrayList<int[]> prestricciones, int psos, int parma, int pmotivo, int pParteC, int plugar){
@@ -223,12 +218,6 @@ public class Juego {
         for (int i = 27; i < 36; i++) {
             lugar.add(i);
         }
-        /*
-        for (int i = 0; i < 5; i++) {
-            guessBF[i]=0;
-            guessBT[i]=0;
-        }*/
-        
     }
     public void buscarRespuesta(){
         int numero;
