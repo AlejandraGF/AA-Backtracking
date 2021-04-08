@@ -104,7 +104,7 @@ public class Juego {
         }
         else {
             guiCartas.sugerenciaBT(nombres[sospechoso], nombres[arma], nombres[motivo], nombres[parteC], nombres[lugar]);
-            boolean bandera,bandera1;
+            boolean bandera;
             int numero = 0;
             do { 
                 bandera=true;
@@ -123,13 +123,13 @@ public class Juego {
                 }else if (numero == 3 && parteC!= solucion[3] && parteC<27) {
                     parteC++;
                     bandera=false;
+                    
                 }
                 else if (lugar!=solucion[4] && lugar<36) {
                     lugar++;
                     bandera=false;
                 }
-                bandera1 = verificarRest(prestricciones, sospechoso, arma, motivo, parteC, lugar);      
-            } while (bandera || bandera1);
+            } while (bandera || verificarRest(prestricciones, sospechoso, arma, motivo, parteC, lugar));
             backtracking(solucion, prestricciones, sospechoso, arma, motivo, parteC, lugar);
         }
     }
